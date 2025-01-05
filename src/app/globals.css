@@ -15,7 +15,45 @@
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: montserrat;
+}
+@keyframes expand {
+  0% {
+    width: 0;
+    left: 50%;
+  }
+  100% {
+    width: 100%;
+    left: 0;
+  }
+}
+
+@keyframes collapse {
+  0% {
+    width: 100%;
+    left: 0;
+  }
+  100% {
+    width: 0;
+    left: 50%;
+  }
+}
+.underline-effect {
+  position: relative;
+  display: inline-block;
+}
+.underline-effect::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background-color: #555353;
+}
+.underline-effect:hover::after {
+  animation: expand 0.3s forwards;
+}
+.underline-effect::after {
+  animation: collapse 0.3s forwards;
 }
