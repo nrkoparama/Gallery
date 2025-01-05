@@ -14,7 +14,7 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. // config port package.json  "scripts"/"dev"
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. // config port: file package.json -> "scripts"/"dev" -> change port
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
