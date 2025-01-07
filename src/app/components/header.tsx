@@ -10,17 +10,17 @@ function Header({ title }: HeaderProps) {
           <Link href="/" className="underline-effect" title="trang chủ">
             <li>home</li>
           </Link>
-          <Link href="about" className="underline-effect" title="về chủ web">
+          <Link href="/pages/about" className="underline-effect" title="về chủ web">
             <li>about</li>
           </Link>
           <Link
-            href="gallery"
+            href="/pages/gallery"
             className="underline-effect"
             title="thư viện ảnh"
           >
             <li>gallery</li>
           </Link>
-          <Link href="contact" className="underline-effect" title="liên hệ">
+          <Link href="/pages/contact" className="underline-effect" title="liên hệ">
             <li>contact</li>
           </Link>
         </ul>

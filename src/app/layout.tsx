@@ -19,13 +19,13 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
   const currentPath = pathname.split("/");
-  console.log(currentPath);
-  const paths = ["/pic", "/about",];
+  
+  const paths = ["/pages/about","/pages/gallery"];
   const condition = paths.some((path) => pathname.startsWith(path));
   return (
     <html lang="en">
       <body className="bg-[#fef2f2] text-[#555353] antialiased">
-        {!condition && <Header title={`${currentPath[currentPath.length - 1]}` || "home"} />}
+        {!condition && <Header title={currentPath[2] ?? "home"} />}
         {children}
         {!condition && <Footer />}
       </body>
