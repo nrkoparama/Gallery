@@ -19,8 +19,8 @@ export default function RootLayout({
 }>) {
   const pathname = usePathname();
   const currentPath = pathname.split("/");
-  
-  const paths = ["/pages/about","/pages/gallery"];
+
+  const paths = ["/pages/about"];
   const condition = paths.some((path) => pathname.startsWith(path));
   return (
     <html lang="en">

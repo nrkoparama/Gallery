@@ -4,7 +4,14 @@ type Picture = {
   urlImage: string;
   dateUpload: string;
   description: string;
-  source: string;
   slider: number;
+  category: {
+    categoryID: string;
+    categoryName: string;
+  };
+  author: {
+    authorId: string;
+    authorName: string;
+  };
 };
 export default Picture;
