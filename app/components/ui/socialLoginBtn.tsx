@@ -1,27 +1,16 @@
+import {signIn} from "next-auth/react";
 import Image from "next/image";
-import {getSession, signIn} from "next-auth/react";
+
 
 export default function SocialLoginBtn({provider}: { provider: string }) {
+
     const handleSignIn = async (p: string) => {
         try {
-            const response = await signIn(p, {callbackUrl: "/"});
 
-            if (response?.error) {
-                console.error("Lỗi đăng nhập () :", response.error);
-                return;
-            }
+            const signInAction = await signIn(p, {redirect: true, callbackUrl: `/?login=true&provider=${p}`});
 
-            let session = null;
-            let retries = 10;
-            while (!session && retries > 0) {
-                await new Promise((resolve) => setTimeout(resolve, 500));
-                session = await getSession();
-                console.log(`Lần thử ${10 - retries}:`, session);
-                retries--;
-            }
-
-            if (!session || !session.user) {
-                console.error("Session không có user, dừng request.");
+            if (signInAction?.error) {
+                console.error("Ủy quyền thất bại");
                 return;
             }
 
@@ -29,19 +18,30 @@ export default function SocialLoginBtn({provider}: { provider: string }) {
             console.error("Lỗi trong handleSignIn:", error);
         }
     };
+
     return (
         <button
             type="button"
             onClick={() => handleSignIn(provider)}
-            className="w-[48%] h-10 hover:bg-gray-50 border border-gray-300 rounded-lg flex justify-center items-center gap-2 transition-all duration-200 hover:cursor-pointer"
+            className="col-span-2 xl:col-span-1 py-2.5 xl:py-2 hover:bg-gray-100 border border-gray-300 rounded-lg transition-all duration-200 hover:cursor-pointer"
         >
-            <Image
-                src={`/assets/icons/${provider}-icon.webp`}
-                alt={provider}
-                width={24}
-                height={24}
-            />
-            <p className={`capitalize`}>{provider}</p>
+            <div className={`flex justify-center items-center gap-3`}>
+                <div className={`flex justify-end`}>
+                    <Image
+                        src={`/assets/icons/${provider}-icon.webp`}
+                        alt={provider}
+                        width={24}
+                        height={24}
+                    />
+                </div>
+
+                <p className={`block w-[20%] text-left sm:hidden capitalize`}>{provider}</p>
+
+                {/*chỉ hiện pc*/}
+                <p className={`hidden xl:block text-gray-500 capitalize`}>{provider}</p>
+            </div>
+
         </button>
+
     )
 }

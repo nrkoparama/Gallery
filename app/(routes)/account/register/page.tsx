@@ -4,17 +4,14 @@ import {useRouter, useSearchParams} from "next/navigation";
 import * as Yup from "yup";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
-import {CircleCheck, Eye, EyeClosed, TriangleAlert} from "lucide-react";
+import {Eye, EyeClosed} from "lucide-react";
+import Form from "@/app/components/ui/Form";
 
 // Api
 import {Register} from "@/app/services/api/account";
 
-// Components
-import SocialBtnLayout from "@/app/components/layout/socialBtnLayout";
-import Divider from "@/app/components/ui/divider";
-
 // Custom functions
-import {setToast} from "@/utils/activeToast";
+import {activeToast} from "@/utils/activeToast";
 import {sleep} from "@/utils/delay";
 import {decodeBase64Url} from "@/utils/base64URL";
 
@@ -49,9 +46,8 @@ const schema = Yup.object().shape({
 
 export default function RegisterPage() {
     const router = useRouter();
-    const search = useSearchParams();
-    const emailEncode = search.get("email");
-    const [email, setEmail] = useState("");
+    const params = useSearchParams();
+    const emailEncode = params.get("email");
     const [showPassword, setShowPassword] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -59,202 +55,194 @@ export default function RegisterPage() {
         register,
         handleSubmit,
         clearErrors,
+        watch,
         reset,
         formState: {errors},
     } = useForm<RegisterForm>({
         mode: 'all',
         resolver: yupResolver(schema),
-        defaultValues: {email},
+        defaultValues: {email: ""},
     });
 
     const submit = handleSubmit(async (data) => {
-        const response = await Register({...data});
-        let success = false;
-        if (response.status === 200) success = true;
 
-        setToast(success ? "Đăng ký tài khoản thành công" : "Đăng ký tài khoản thất bại", {
-            icon: success ? <CircleCheck className={`text-green-500`}/> : <TriangleAlert className={`text-red-500`}/>,
-            description: response.message,
-            duration: 2000
+        const res = await Register(data);
+        console.log(res)
+
+        let isSuccess = false;
+
+        if (res.status_code === 201) {
+            localStorage.setItem("_irs", JSON.stringify(true));
+            isSuccess = true;
+        }
+
+        activeToast(isSuccess ? "Đăng ký tài khoản thành công" : "Đăng ký tài khoản thất bại", {
+            type: isSuccess ? "success" : "error",
+            description: isSuccess ? "Đang chuyển hướng sang trang đăng nhập" : res.message,
         })
 
         await sleep(3000);
-        if (success) return router.push("/account/login");
+        if (isSuccess) return router.push("/account/login");
         return;
     })
 
     useEffect(() => {
-        const setE = async () => {
+        const setEmail = async () => {
             if (!emailEncode) {
-                setToast("Email không hợp lệ", {
-                    icon: <TriangleAlert className={`text-red-500`}/>,
-                    description: "Đang chuyển hướng về trang xác thực email",
-                    duration: 2000
-                });
-                await sleep(3000);
-                router.push("/account/register/email-verify");
+
+                activeToast("Xác thực tài khoản thất bại", {
+                    type: "error",
+                    description: "Vui lòng xác thực lại email !"
+                })
+
+                setTimeout(() => {
+                    router.push("/account/register/verify-email");
+                }, 4000);
             } else {
-                setEmail(decodeBase64Url(emailEncode));
+                reset({email: decodeBase64Url(emailEncode)})
             }
         }
-        setE();
-    }, [emailEncode, router]);
+        setEmail();
+    }, [emailEncode, router, reset]);
 
-    useEffect(() => {
-        if (email) {
-            reset({email});
-        }
-    }, [email, reset]);
     return (
-        <>
-            <div className={`min-h-screen py-14 `}>
-                <div className="max-w-[500px] mx-auto">
-                    <div className="bg-white shadow-xl rounded-xl p-8">
-                        {/* Header */}
-                        <div className="text-center mb-6">
-                            <h1 className="text-3xl font-bold text-[#00009C] tracking-tight">
-                                Đăng ký
-                            </h1>
+        <Form tittle="Đăng ký" login={true}>
+            <form onSubmit={submit}>
+                <div className={`space-y-4`}>
+                    {/* Name */}
+                    <div className="grid grid-cols-2 xl:gap-5">
+                        {/* First Name */}
+                        <div className={`col-span-2 xl:col-span-1`}>
+                            <label htmlFor="firstName" className="block text-gray-700 font-medium mb-2">
+                                Họ <span className={`text-red-500`}>*</span>
+                            </label>
+                            <input
+                                id="firstName"
+                                type="text"
+                                {...register("firstName")}
+                                onChange={() => clearErrors('firstName')}
+                                className={`w-full text-gray-500 px-4 py-2.5 border rounded-lg focus:outline-none ring-inset ${errors.firstName ? 'border-red-500' : `border-gray-300 focus:ring-1 focus:ring-[#0000CD]`} transition duration-200`}
+                            />
+                            {errors.firstName && (
+                                <p className="text-sm text-red-500 mt-1">
+                                    {errors.firstName.message}
+                                </p>
+                            )}
                         </div>
 
-                        <form onSubmit={submit}>
-                            <div className={`space-y-5`}>
-                                {/* Name */}
-                                <div className="grid grid-cols-2 gap-4">
-                                    {/* First Name */}
-                                    <div>
-                                        <label
-                                            htmlFor="firstName"
-                                            className="block font-medium text-gray-700 mb-1">
-                                            Họ
-                                        </label>
-                                        <input
-                                            id="firstName"
-                                            type="text"
-                                            {...register("firstName")}
-                                            onChange={() => clearErrors('firstName')}
-                                            className={`w-full text-gray-500 px-4 py-2.5 rounded-lg border focus:outline-none ring-inset ${errors.firstName ? 'border-red-600' : `border-gray-300 focus:ring-1 focus:ring-[#0000CD]`} transition duration-200`}
-                                        />
-                                        {errors.firstName && (
-                                            <p className="mt-1 text-sm text-red-600">
-                                                {errors.firstName.message}
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    {/* Last Name */}
-                                    <div>
-                                        <label htmlFor="lastName"
-                                               className="block font-medium text-gray-700 mb-1">
-                                            Tên
-                                        </label>
-                                        <input
-                                            id="lastName"
-                                            type="text"
-                                            {...register("lastName")}
-                                            onChange={() => clearErrors('lastName')}
-                                            className={`w-full text-gray-500 px-4 py-2.5 rounded-lg border focus:outline-none ring-inset ${errors.lastName ? 'border-red-600' : `border-gray-300 focus:ring-1 focus:ring-[#0000CD]`} transition duration-200`}
-                                        />
-                                        {errors.lastName && (
-                                            <p className="mt-1 text-sm text-red-600">
-                                                {errors.lastName.message}
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-
-                                {/* Email Field */}
-                                <div>
-                                    <label htmlFor="email" className="block font-medium text-gray-700 mb-2">
-                                        Email
-                                    </label>
-                                    <input
-                                        id="email"
-                                        type="text"
-                                        value={email}
-                                        disabled
-                                        {...register("email")}
-                                        className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-500 bg-gray-50 cursor-not-allowed"
-                                    />
-                                </div>
-
-                                {/* Password Field */}
-                                <div>
-                                    <label htmlFor="password" className="block font-medium text-gray-700 mb-1">
-                                        Mật khẩu
-                                    </label>
-                                    <div className="relative">
-                                        <input
-                                            id="password"
-                                            {...register("password")}
-                                            onChange={() => clearErrors('password')}
-                                            type={showPassword ? "text" : "password"}
-                                            className={`w-full text-gray-500 px-4 py-2.5 rounded-lg border focus:outline-none ring-inset ${errors.password ? 'border-red-600' : `border-gray-300 focus:ring-1 focus:ring-[#0000CD]`} transition duration-200`}
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => setShowPassword(!showPassword)}
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 transition-colors cursor-pointer"
-                                        >
-                                            {showPassword ? (
-                                                <Eye size={20} strokeWidth={1.5} className={`text-[#00009C] `}/>
-                                            ) : (
-                                                <EyeClosed size={20} strokeWidth={1.5}
-                                                           className={`text-gray-400 hover:text-[#00009C]`}/>
-                                            )}
-                                        </button>
-                                    </div>
-                                    {errors.password && (
-                                        <p className="mt-1 text-sm text-red-600">
-                                            {errors.password.message}
-                                        </p>
-                                    )}
-                                </div>
-
-                                {/* Terms */}
-                                <div className="flex items-start gap-2">
-                                    <input
-                                        type="checkbox"
-                                        id="confirmTerms"
-                                        onChange={(e) => setIsSubmitting(e.target.checked)}
-                                        className="mt-1 w-5 h-5 rounded border-gray-300 duration-200 cursor-pointer"
-                                    />
-                                    <label
-                                        htmlFor="confirmTerms"
-                                        className="text-sm cursor-pointer"
-                                    >
-                                        Tôi đồng ý với{" "}
-                                        <span
-                                            onClick={() => router.push("/pages/privacy")}
-                                            className="font-semibold text-[#00009C] underline"
-                                        >
-                                            Chính sách bảo mật và Điều khoản sử dụng
-                                        </span>{" "}
-                                        của Gallery.
-                                    </label>
-                                </div>
-
-                                {/* Submit Button */}
-                                <button
-                                    type="submit"
-                                    disabled={!isSubmitting}
-                                    className={`w-full bg-[#00009C] text-white rounded-lg py-2.5 border-2 ${!isSubmitting ? 'hover:cursor-not-allowed' : 'hover:bg-white hover:text-[#00009C] hover:border-[#00009C] hover:cursor-pointer'}`}
-                                >
-                                    Đăng ký
-                                </button>
-
-                            </div>
-                        </form>
-
-                        {/*Divider*/}
-                        <Divider/>
-
-                        {/*Social buttons*/}
-                        <SocialBtnLayout/>
+                        {/* Last Name */}
+                        <div className={`col-span-2 xl:col-span-1`}>
+                            <label htmlFor="lastName" className="block text-gray-700 font-medium mb-2">
+                                Tên <span className={`text-red-500`}>*</span>
+                            </label>
+                            <input
+                                id="lastName"
+                                type="text"
+                                {...register("lastName")}
+                                onChange={() => clearErrors('lastName')}
+                                className={`w-full text-gray-500 px-4 py-2.5 border rounded-lg focus:outline-none ring-inset ${errors.lastName ? 'border-red-500' : `border-gray-300 focus:ring-1 focus:ring-[#0000CD]`} transition duration-200`}
+                            />
+                            {errors.lastName && (
+                                <p className="text-sm text-red-500 mt-1">
+                                    {errors.lastName.message}
+                                </p>
+                            )}
+                        </div>
                     </div>
-                </div>
-            </div>
-        </>
 
-    );
+                    {/* Email Field */}
+                    <div>
+                        <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
+                            Email <span className={`text-red-500`}>*</span>
+                        </label>
+                        <input
+                            id="email"
+                            type="text"
+                            value={watch("email")}
+                            disabled
+                            {...register("email")}
+                            className="w-full bg-gray-200 text-gray-400  px-4 py-2.5 border rounded-lg cursor-not-allowed"
+                        />
+                    </div>
+
+                    {/* Password Field */}
+                    <div>
+
+                        <label htmlFor="password" className="block text-gray-700 font-medium mb-2">
+                            Mật khẩu <span className={`text-red-500`}>*</span>
+                        </label>
+
+                        <div className="relative">
+
+                            <input
+                                id="password"
+                                {...register("password")}
+                                onChange={() => clearErrors('password')}
+                                type={showPassword ? "text" : "password"}
+                                className={`w-full text-gray-500 px-4 py-2.5 border rounded-lg focus:outline-none ring-inset ${errors.password ? 'border-red-500' : `border-gray-300 focus:ring-1 focus:ring-[#0000CD]`} transition duration-200`}
+                            />
+
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 transition-colors cursor-pointer"
+                            >
+                                {showPassword ? (
+                                    <Eye size={20} strokeWidth={1.5} className={`text-[#00009C]`}/>
+                                ) : (
+                                    <EyeClosed size={20} strokeWidth={1.5}
+                                               className={`text-gray-400 hover:text-[#00009C]`}/>
+                                )}
+                            </button>
+
+                        </div>
+                        {errors.password && (
+                            <p className="text-sm text-red-500 mt-1">
+                                {errors.password.message}
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Terms */}
+                    <div className="flex items-start gap-2">
+
+                        <input
+                            type="checkbox"
+                            id="confirmTerms"
+                            onChange={(e) => setIsSubmitting(e.target.checked)}
+                            className="w-5 h-5 mt-1 cursor-pointer"
+                        />
+
+                        <label htmlFor="confirmTerms" className="text-sm cursor-pointer">
+
+                            Tôi đồng ý với{" "}
+
+                            <span onClick={() => router.push("/privacy")}
+                                  className="font-bold text-[#00009C] underline">
+                                            Chính sách bảo mật
+                                        </span>
+
+                            {" "} và {" "}
+
+                            <span onClick={() => router.push("/terms")}
+                                  className="font-bold text-[#00009C] underline">
+                                            Điều khoản sử dụng
+                                        </span>
+
+                            {" "}của Gallery.
+
+                        </label>
+
+                    </div>
+
+                    {/* Submit Button */}
+                    <button type="submit" disabled={!isSubmitting}
+                            className={`w-full bg-[#00009C] text-white py-2.5 border-2 rounded-lg ${!isSubmitting ? "cursor-not-allowed" : "hover:bg-white hover:text-[#00009C] hover:border-[#00009C] cursor-pointer"}`}>
+                        Đăng ký
+                    </button>
+
+                </div>
+            </form>
+        </Form>
+    )
 }

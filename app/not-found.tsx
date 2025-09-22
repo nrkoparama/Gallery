@@ -2,32 +2,28 @@
 import Image from "next/image";
 import {useRouter} from "next/navigation";
 
-import {Home} from "lucide-react";
-
 export default function NotFoundPage() {
     const router = useRouter();
     return (
-        <section className={`w-full tracking-wide flex flex-col justify-center items-center space-y-10`}>
-            <Image
-                src={`/assets/icons/404-not-found.png`}
-                alt={`Not fond image`}
-                priority={true}
-                width={360}
-                height={360}
-            />
+        <section className={`xl:min-h-screen`}>
+            <div className={`text-xl font-medium tracking-wider flex flex-col items-center space-y-8`}>
+                <Image
+                    src={`/assets/icons/404-not-found.png`}
+                    alt={`Not found image`}
+                    priority={true}
+                    width={360}
+                    height={360}
+                />
 
-            <div className={`text-xl font-semibold flex flex-col items-center space-y-5`}>
                 <p>Oops, có vẻ bạn bị lạc rồi.</p>
-                <div
-                    onClick={() => router.push("/")}
-                    className={`hover:text-[#00009C] flex justify-center gap-2 hover:cursor-pointer`}
-                >
-                    <Home/>
-                    <p className={``}>
-                        Về trang chủ
-                    </p>
-                </div>
+
+                <button onClick={() => router.push("/")} className={`bg-[#00ba7c] hover:bg-white text-white hover:text-[#00ba7c] px-6 py-2 border-2 border-[#00ba7c] rounded-lg hover:cursor-pointer`}>
+                    Về trang chủ
+                </button>
+
             </div>
+
+
         </section>
     )
 }

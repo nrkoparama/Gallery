@@ -1,28 +1,34 @@
 interface Author {
-    _id: string;
-    tag: string;
-    firstName: string;
-    lastName: string;
-    fullName: string;
-    email: string;
-    password: string;
-    image: string;
-    emailVerified: boolean;
-    isThirdParty: boolean;
-    loginType: string;
-    socials: [{ platform: string, url: string }];
-    role: number;
-    status: number;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date;
+    _id: string,
+    firstName: string,
+    lastName: string,
+    fullName: string,
+    tagName: string,
+    email: string,
+    password: string,
+    description: string,
+    achievements: [string],
+    image: string | null,
+    isThirdParty: boolean,
+    provider: string,
+    socials: [{ platform: string, url: string }],
+    role: number,
+    status: number,
+    createdAt: Date,
+    updatedAt: Date,
+    deletedAt: Date,
 }
 
-type RegisterType = Pick<Author, "firstName" | "lastName"| "email" | "password">;
 type LoginType = Pick<Author, "email" | "password">;
-type UpdateProfile = Pick<Author, "fullName" | "tag" | "image">
 
-export type {Author, RegisterType, LoginType, UpdateProfile};
+type RegisterType = Pick<Author, "firstName" | "lastName" | "email" | "password">;
+
+type UpdateFormType = Pick<Author, "firstName" | "lastName" | "tagName" | "provider" | "email" | "description">
+    & { image: File | null };
+
+type NewsLetterForm = Pick<Author, "email">
+
+export type {Author, RegisterType, LoginType, UpdateFormType, NewsLetterForm};
 
 
 

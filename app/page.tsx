@@ -1,34 +1,34 @@
 "use client";
-import {useState} from "react";
-import MobileNav from "@/app/components/ui/mobile-nav";
-import {toast} from "sonner"
-import {Button} from "@/components/ui/button"
-import {TriangleAlert } from "lucide-react";
-import {signOut} from "next-auth/react";
-import {useSelector} from "react-redux";
-import type {ReduxStates} from "@/types/Redux"
+import {useRouter, useSearchParams} from "next/navigation";
+import {useEffect} from "react";
+import {activeToast} from "@/utils/activeToast";
+import HomeComponent from "@/app/components/ui/HomeComponent";
 
 export default function Home() {
-    const id = useSelector((state: ReduxStates) => state.account.accountInformation.id);
-    console.log({id})
-    const [navMobile, setNavMobile] = useState(false);
-    const handleClick = () => {
-        toast.error("Gửi mail thất bại", {
-            icon: <TriangleAlert  className={`text-red-500`}/>,
-            description: "Vui lòng kiểm tra email",
-        })
-    }
-    return (
-        <div>
-            <button onClick={() => setNavMobile(true)}>Mount</button>
-            {navMobile && (<MobileNav setActive={setNavMobile}/>)}
-            <Button
-                variant="outline"
-                onClick={() => handleClick()}
-            >
-                Show Toast
-            </Button>
-            <button onClick={()=>signOut()}>Thoát</button>
-        </div>
-    );
+    const params = useSearchParams()
+    const router = useRouter();
+    // const session = useSession();
+
+
+    useEffect(() => {
+        const isLogin = params.get("login");
+        // const isGreet = localStorage.getItem("greet");
+        // const isNew = localStorage.getItem("isNew");
+
+
+        if (!isLogin) {
+            activeToast("Đăng nhập thành công", {
+                type: "success",
+                description: "Chào mừng quay trở lại",
+                duration: 4000
+            });
+        }
+
+        const timerId = setTimeout(() => router.replace("/"), 1000);
+
+        return () => clearTimeout(timerId);
+    }, [params, router]);
+
+    return <HomeComponent />
+
 }

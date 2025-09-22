@@ -1,87 +1,135 @@
-const accountUrl = `${process.env.NEXT_PUBLIC_DEV_SERVER_URL}/authors/author`;
+const accountUrl = `${process.env.NEXT_PUBLIC_DEV_SERVER_URL}/authors`;
 // const prodUrl = "";
 
-import type {LoginType, RegisterType, UpdateProfile} from "@/types/Author";
+import type {LoginType, RegisterType} from "@/types/Author";
+import {User} from "next-auth";
+// import {getCookieSSR} from "@/utils/cookie";
+// import {NextRequest} from "next/server";
 
-async function VerifyEmail(email: string) {
-    try {
-        const res = await fetch(`${accountUrl}/email-verify`, {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({email})
-        });
-        const status = res.status;
-        const data = await res.json();
-        return {status, ...data};
-    } catch (error) {
-        return {status: 500, message: "Lỗi xác thực email", error};
-    }
-}
+/*------------------------Client Apis------------------------------------*/
 
 async function Register(form: RegisterType) {
     try {
-        const res = await fetch(`${accountUrl}/register`, {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({...form, isThirdParty: false}),
-            }
-        );
-        const status = res.status;
-        const data = await res.json();
-        return {status, ...data};
+        const response = await fetch(`${accountUrl}/register`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(form),
+        });
+
+        return await response.json();
     } catch (error) {
-        return {status: 500, message: "Lỗi tạo tài khoản ()", error};
+        return {status_code: 500, message: "Có lỗi. Vui lòng thử lại sau!", error};
     }
 }
 
 async function Login(form: LoginType) {
     try {
-        const res = await fetch(`${accountUrl}/login`, {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({...form}),
-            }
-        );
-        const status = res.status;
-        const data = await res.json();
-        return {status, ...data};
+        const response = await fetch(`${accountUrl}/login`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(form),
+        });
+
+        return await response.json();
     } catch (error) {
-        return {status: 500, message: "Lỗi đăng nhập", error};
+        return {status_code: 500, message: "Có lỗi. Vui lòng thử lại sau!", error};
+    }
+}
+
+async function ThirdPartyLogin(provider: string, user: User) {
+    try {
+        let firstName = "";
+        let lastName = "";
+
+        switch (provider) {
+            case "google": {
+                if (user?.name) {
+                    /* lastIndexOf(value): ví dụ lastIndexOf(" ") lấy ra vị trí dấu _ cuối cùng : number */
+                    const lastSpaceIndex = user.name.lastIndexOf(" ");
+
+                    if (lastSpaceIndex === -1) {
+                        firstName = "";
+                        lastName = user.name;
+                    } else {
+                        firstName = user.name.slice(0, lastSpaceIndex);
+                        lastName = user.name.slice(lastSpaceIndex + 1); // bỏ khoảng trống cuối và lấy toàn bộ về sau
+                    }
+                }
+                break;
+            }
+            case "facebook": {
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+
+        const response = await fetch(`${accountUrl}/third-party-login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({...user, firstName, lastName, provider, isThirdParty: true})
+        })
+
+        return await response.json();
+    } catch (error) {
+        return {status_code: 500, message: "Có lỗi. Vui lòng thử lại sau!", error}
     }
 }
 
 async function GetUserInfo() {
     try {
-        const res = await fetch(`${accountUrl}`, {credentials: "include"});
-        const status = res.status;
-        const data = await res.json();
-        return {status, ...data};
+        const getTokenResponse = await getNextAuthCookies();
+
+        if (getTokenResponse.status_code !== 200) {
+            return getTokenResponse;
+        }
+        const {accessToken, refreshToken} = getTokenResponse;
+
+        const response = await fetch(`${accountUrl}/author`, {
+            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                "X-Refresh-Token": refreshToken,
+            }
+        });
+
+        return await response.json();
     } catch (error) {
-        return {status: 500, message: "Lỗi lấy thông tin tài khoản", error};
+        return {status_code: 500, message: "Có lỗi. Vui lòng thử lại sau!", error};
     }
 }
 
 async function UpdateProfile(form: FormData) {
     try {
+
+        const getTokenResponse = await getNextAuthCookies();
+
+        if (getTokenResponse.status_code !== 200) {
+            return getTokenResponse;
+        }
+
+        const {accessToken, refreshToken} = getTokenResponse;
+
         const response = await fetch(`${accountUrl}/update-profile `, {
             method: "PATCH",
-            credentials: "include",
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                "X-Refresh-Token": refreshToken
+            },
             body: form
         });
-        const status = response.status;
-        const data = await response.json();
-        return {status, ...data};
+        return await response.json();
     } catch (error) {
-        return {status: 500, message: "Lỗi cập nhật thông tin tài khoản ()", error}
+        return {status_code: 500, message: "Lỗi cập nhật thông tin tài khoản", error}
     }
 }
 
@@ -98,11 +146,66 @@ async function ReLogin() {
     }
 }
 
+async function SoftDelete(password: string) {
+    try {
+        const response = await fetch(`${accountUrl}/soft-delete`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({password})
+        });
+        const status = response.status;
+        const data = await response.json();
+        return {status, ...data};
+    } catch (error) {
+        return {status: 500, message: "Lỗi refresh token", error};
+    }
+}
+
+/*------------------------Server Apis------------------------------------*/
+
+async function getNextAuthCookies() {
+    try {
+        const response = await fetch("/api/next-auth-cookies", {
+            method: "GET"
+        });
+
+        return await response.json();
+    } catch (error) {
+        return {status_code: 500, message: "Lỗi lấy token", error}
+    }
+}
+
 export {
-    VerifyEmail,
     Register,
+    ThirdPartyLogin,
     Login,
     GetUserInfo,
     UpdateProfile,
-    ReLogin
+    ReLogin,
+    SoftDelete,
+    getNextAuthCookies
 }
+
+/*------------------------- Deprecated --------------------------
+
+async function VerifyEmail(email: string) {
+    try {
+        const response = await fetch(`${accountUrl}/verify-email`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({email})
+        });
+
+        return await response.json();
+    } catch (error) {
+        return {status_code: 500, message: "Có lỗi. Vui lòng thử lại sau!", error};
+    }
+}
+
+---------------------------------------------------------------------------*/
