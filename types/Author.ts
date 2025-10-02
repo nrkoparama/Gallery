@@ -1,3 +1,5 @@
+import type {Notification} from "@/types/Subscriber";
+
 interface Author {
     _id: string,
     firstName: string,
@@ -11,6 +13,7 @@ interface Author {
     image: string | null,
     isThirdParty: boolean,
     provider: string,
+    subscriberId: Notification | null,
     socials: [{ platform: string, url: string }],
     role: number,
     status: number,
