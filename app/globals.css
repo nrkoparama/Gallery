@@ -4,9 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-    --font-montserrat: "Montserrat", sans-serif;
     --bg-color: #fef2f2;
-    --text-shadow-custom: 0 0 20px 5px rgba(0,0,0,0.25);
+    --text-shadow-custom: 0 0 20px 5px rgba(0, 0, 0, 0.25);
     /* opacity 50% */
     --bg-blur-color: #7e817d;
     --text-color: #555353;
@@ -53,15 +52,9 @@
 }
 
 body {
-    font-family: var(--font-montserrat);
-    /*background-color: var(--bg-color);*/
-    color: var(--text-color);
+    font-family: "Be Vietnam Pro", sans-serif;
+    color: #555353;
     background-color: #F5F5F5
-}
-
-.full-shadow {
-    /*box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;*/
-    /*box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;*/
 }
 
 @theme inline {
@@ -150,10 +143,56 @@ body {
     }
 }
 
-/*toast shadcn */
-[data-sonner-toast][data-styled=true] {
-    gap: 10px !important;
+
+/*Xóa nút tăng giảm của input[type="number"]*/
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    /*Mozilla & FireFox*/
+    -moz-appearance: textfield;
+    margin: 0
 }
+
+/*Ẫn thanh cuộn khi dùng overflow-scroll*/
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none; /* IE & Edge*/
+    scrollbar-width: none; /* Firefox*/
+}
+
+/*----------------*/
+.skeleton {
+    position: relative;
+    background: #f2f2f2; /* nền xám nhạt */
+    overflow: hidden;
+}
+
+.skeleton::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 150%;
+    height: 100%;
+    background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.6) 50%,
+            rgba(255, 255, 255, 0) 100%
+    );
+    animation: loadingShimmer 1.2s infinite;
+}
+
+@keyframes loadingShimmer {
+    100% {
+        left: 100%;
+    }
+}
+
+
 
 
 

@@ -1,4 +1,5 @@
 interface Subscriber {
+    subscriberId: string | null,
     email?: string,
     receive:
         {

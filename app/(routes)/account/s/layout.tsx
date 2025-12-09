@@ -4,7 +4,7 @@ import Image from "next/image";
 import React, {ReactNode} from "react";
 
 /* ---------------------------------------- Custom hooks --------------------------------------------- */
-import {useAuthor} from "@/app/components/provider/authorContext.provider";
+import {useAuthor} from "@/components/provider/authorContext.provider";
 /* ---------------------------------------- Components --------------------------------------------- */
 import {Bell, Settings} from "lucide-react";
 
@@ -22,7 +22,7 @@ export default function SettingsLayout({children}: { children: ReactNode }) {
                         <div
                             className={`relative w-24 h-24 aspect-square rounded-full overflow-hidden border-2 shadow`}>
                             <Image
-                                src={author?.image ? author.image : "/assets/icons/default-user.jpg "}
+                                src={author?.image ? author.image : "/assets/icons/default-user.jpg"}
                                 alt={`${author?.fullName} avatar`}
                                 fill sizes={"96px"}
                                 priority

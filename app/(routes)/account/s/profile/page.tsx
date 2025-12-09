@@ -1,74 +1,20 @@
 "use client";
-/* ---------------------------------------- Yup --------------------------------------------- */
-import * as Yup from "yup";
 /* ---------------------------------------- React hook form --------------------------------------------- */
-import {UpdateProfile} from "@/app/services/api/account";
+import {UpdateProfile} from "@/services/api/account";
 import {activeToast} from "@/utils/activeToast";
 /* ---------------------------------------- Types --------------------------------------------- */
-import {UpdateFormType} from "@/types/Author";
+import {UpdateProfileForm} from "@/types/Form";
 /* ---------------------------------------- Constants --------------------------------------------- */
-import {forbiddenWords} from "@/constants";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import Image from "next/image";
 import {X} from "lucide-react";
 import React, {useEffect, useRef, useState} from "react";
-import {useAuthor} from "@/app/components/provider/authorContext.provider";
+import {useAuthor} from "@/components/provider/authorContext.provider";
 /* --------------------------------------------------------------------------------------- */
 // const tabs = ["tài khoản", "thư viện ảnh", "bài viết", "bảo mật"];
 const providers = {credentials: "Gmail", google: "Google", facebook: "Facebook"};
-const schema = Yup.object().shape({
-    firstName: Yup.string()
-        .required("* Vui lòng nhập họ")
-        .trim()
-        .min(1, "* Họ cần tối thiểu 1 ký tự")
-        .max(50, "* Họ tối đa 50 ký tự")
-        .matches(/[A-Za-z0-9 ]/, "* Họ chỉ được chứa các ký tự ( A - Z, a - z và 0 - 9 ) ") // case các ký tự hợp lệ + không hợp lệ lỗi: abc$%# vẫn cho phép -> lỗi
-        .test("Ban words", "* Phát hiện từ ngữ không hợp lệ !", (value) => {
-            if (!value) return true; // để required() xử lý
-            // nếu có từ cấm ->  return !true và trigger test() error ( ngược lại !false)
-            return !forbiddenWords.some((word) =>
-                value.toLowerCase().includes(word.toLowerCase())
-            )
-        }),
-    lastName: Yup.string()
-        .required("* Vui lòng nhập tên")
-        .trim()
-        .min(1, "* Tên tối thiểu 1 ký tự")
-        .max(10, "* Tên tối đa 10 ký tự")
-        .matches(/[A-Za-z0-9]/, "* Tên chỉ được chứa các ký tự ( A - Z, a - z và 0 - 9 )") // case các ký tự hợp lệ + không hợp lệ lỗi: abc$%# vẫn cho phép -> lỗi
-        .test("Ban words", "* Phát hiện từ ngữ không hợp lệ !", (value) => {
-            if (!value) return true; // để required() xử lý
-            // nếu có từ cấm ->  return !true và trigger test() error ( ngược lại !false)
-            return !forbiddenWords.some((word) =>
-                value.toLowerCase().includes(word.toLowerCase())
-            )
-        }),
-    tagName: Yup.string()
-        .required("* Vui lòng nhập thẻ tên")
-        .trim()
-        .min(5, "* Thẻ tên tối thiểu 5 ký tự")
-        .max(10, "* Thẻ tên tối đa 10 ký tự")
-        .matches(
-            /^[A-Za-z][A-Za-z0-9_]{4,9}$/,
-            '* Thẻ tên có 10 ký tự bắt đầu bằng chữ cái và chí được chứa ( A - Z, a - z, 0 - 9 và "_" )'
-        ),
-    provider: Yup.string().required(),
-    email: Yup.string()
-        .required("* Vui lòng nhập email")
-        .trim()
-        .email("* Email không hợp lệ"),
-    image: Yup.mixed<File>()
-        .nullable()
-        .default(null),
-    description: Yup.string()
-        .required("* Vui lòng nhập mô tả")
-        .trim()
-        .test("Ban words", "* Phát hiện từ ngữ không hợp lệ !", (value) => {
-            return !forbiddenWords.some((word) => value?.toLowerCase().includes(word.toLowerCase()))
-        })
-
-});
+import {userSchema} from "@/types/Yup.Schema";
 
 export default function ProfilePage() {
     const {author} = useAuthor();
@@ -87,7 +33,7 @@ export default function ProfilePage() {
         return;
     }
 
-    const {register, handleSubmit, clearErrors, setValue, reset, formState: {errors}} = useForm<UpdateFormType>({
+    const {register, handleSubmit, clearErrors, setValue, reset, formState: {errors}} = useForm<UpdateProfileForm>({
         mode: "all",
         defaultValues: {
             firstName: author?.firstName,
@@ -98,7 +44,7 @@ export default function ProfilePage() {
             image: null,
             description: author?.description
         },
-        resolver: yupResolver(schema)
+        resolver: yupResolver(userSchema)
     })
 
     const triggerInputFile = () => {

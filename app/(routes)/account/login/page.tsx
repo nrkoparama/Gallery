@@ -1,35 +1,22 @@
 "use client";
-import * as Yup from "yup";
 import {useState} from "react";
 import {useRouter} from "next/navigation";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
+
+
+// Components
 import {Eye, EyeClosed} from "lucide-react";
-import Form from "@/app/components/ui/Form";
+import Form from "@/components/build/Form";
 
 
 // Types
-import type {LoginType} from "@/types/Author";
+import type {LoginForm} from "@/types/Form";
+import {loginSchema} from "@/types/Yup.Schema";
 
 // Functions
 import {activeToast} from "@/utils/activeToast";
 import {signIn} from "next-auth/react";
-
-const schema = Yup.object().shape({
-    email: Yup.string()
-        .required("* Vui lòng nhập email")
-        .trim()
-        .email("* Email không hợp lệ"),
-    password: Yup.string()
-        .required("* Vui lòng nhập mật khẩu")
-        .trim()
-        .min(8, "* Mật khẩu tối thiểu 8 kí tự")
-        .matches(
-            /^[A-Z](?=.*\d)(?=.*[@$!%*?&]).{7,}$/,
-            "* Mật khẩu phải bắt đầu bằng chữ in hoa, chứa ít nhất một chữ số và một ký tự đặc biệt"
-        ),
-});
-
 
 export default function LoginPage() {
     const router = useRouter();
@@ -40,9 +27,9 @@ export default function LoginPage() {
         handleSubmit,
         clearErrors,
         formState: {errors},
-    } = useForm<LoginType>({
+    } = useForm<LoginForm>({
         mode: "all",
-        resolver: yupResolver(schema),
+        resolver: yupResolver(loginSchema),
     });
 
     const submit = handleSubmit(async (data) => {

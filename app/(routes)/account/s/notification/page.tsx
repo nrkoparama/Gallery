@@ -1,9 +1,17 @@
 "use client";
-import {Switch} from "@/components/ui/switch";
 import {useEffect, useState} from "react";
+
+// Api
+import {getSubscriberById} from "@/services/api/subscriber";
+
+// Custom hooks
+import {useAuthor} from "@/components/provider/authorContext.provider";
+
+// Components
+import {Switch} from "@/components/ui/switch";
+
+// Type
 import type {Subscriber} from "@/types/Subscriber";
-import {useAuthor} from "@/app/components/provider/authorContext.provider";
-import {getSubscriberById} from "@/app/services/api/subscriber";
 
 const notifications = [
     {
@@ -56,29 +64,30 @@ export default function NotificationPage() {
         if (notificationSettings) {
             setNotificationSettings(prev => {
                 if (!prev) return null;
+                if (!prev.receive) return prev;
 
                 if (type === "all") {
+                    const newValue = !(prev.receive.all ?? false);
                     return {
                         ...prev,
                         receive: {
-                            all: !prev.receive?.all,
-                            system: !prev.receive?.all,
-                            privacyPolicy: !prev.receive?.all,
-                            account: !prev.receive?.all,
-                            interaction: !prev.receive?.all,
-                            following: !prev.receive?.all,
-                            suggestion: !prev.receive?.all,
-                            event: !prev.receive?.all,
-                            marketing: !prev.receive?.all,
+                            all: newValue,
+                            system: newValue,
+                            privacyPolicy: newValue,
+                            account: newValue,
+                            interaction: newValue,
+                            following: newValue,
+                            suggestion: newValue,
+                            event: newValue,
+                            marketing: newValue,
                         }
                     }
-                }
-                else {
+                } else {
                     return {
                         ...prev,
                         receive: {
                             ...prev.receive,
-                            [type]: !prev.receive![type as keyof typeof prev.receive]
+                            [type]: !(prev.receive![type as keyof typeof prev.receive] ?? false)
                         }
                     }
                 }
@@ -90,7 +99,7 @@ export default function NotificationPage() {
 
     useEffect(() => {
         if (author) {
-            const fetchSubscriberSettings = async (id: string) => {
+            const fetchSubscriberSettings = async (id:string) => {
                 const res = await getSubscriberById(id);
 
                 if (res.status_code === 200) {
@@ -101,13 +110,9 @@ export default function NotificationPage() {
         }
     }, [author]);
 
-    useEffect(() => {
-        if (notificationSettings) {
-            setNotificationSettings(notificationSettings);
-        }
-    }, [notificationSettings]);
-
-    console.log(notificationSettings)
+    const areAllNotificationEnabled= notificationSettings ?
+        notifications.every(n=> notificationSettings.receive?.[n.type as keyof typeof notificationSettings.receive])
+        : false
 
     return (
         <div>
@@ -121,7 +126,7 @@ export default function NotificationPage() {
                                 </label>
                             </div>
                             <Switch
-                                checked={notificationSettings?.receive?.["all" as keyof typeof notificationSettings["receive"]]}
+                                checked={areAllNotificationEnabled}
                                 onCheckedChange={() => handleChecked("all")}
                                 className={`cursor-pointer`}
                             />

@@ -3,7 +3,7 @@ import { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials"
-import { Login, ThirdPartyLogin } from "@/app/services/api/account";
+import { Login, ThirdPartyLogin } from "@/services/api/account";
 
 
 export const authOptions: AuthOptions = {

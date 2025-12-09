@@ -1,12 +1,12 @@
 import type {Metadata} from "next";
 import "./globals.css";
 import {ReactNode} from "react";
-import NextAuthProvider from "@/app/components/provider/next-auth.provider";
-import ReduxProvider from "@/app/components/provider/redux-toolkit.provider";
-import AuthorContextProvider from "@/app/components/provider/authorContext.provider"
+import NextAuthProvider from "@/components/provider/next-auth.provider";
+import ReduxProvider from "@/components/provider/redux-toolkit.provider";
+import AuthorContextProvider from "@/components/provider/authorContext.provider"
 import {Toaster} from "@/components/ui/sonner";
-import Header from "@/app/components/ui/Header/Header"
-import Footer from "@/app/components/ui/Footer/Footer";
+import Header from "@/components/build/Header/Header"
+import Footer from "@/components/build/Footer/Footer";
 
 import {getServerSession} from "next-auth";
 import {authOptions} from "@/app/api/auth/authOptions";
@@ -19,21 +19,17 @@ export const metadata: Metadata = {
     }
 };
 
-export default async function RootLayout({
-                                             children,
-                                         }: Readonly<{
-    children: ReactNode;
-}>) {
+
+export default async function RootLayout({children}: Readonly<{ children: ReactNode }>) {
     const session = await getServerSession(authOptions);
     return (
-        <html lang="en">
-        <body className="antialiased">
-        {/*mx-4 lg:mx-7 xl:mx-12*/}
+        <html lang="vi">
+        <body className={`antialiased tracking-wider`}>
         <AuthorContextProvider>
             <ReduxProvider>
                 <NextAuthProvider session={session}>
                     <Header/>
-                    {children}
+                    <main>{children}</main>
                     <Footer/>
                     <Toaster
                         position={`top-center`}

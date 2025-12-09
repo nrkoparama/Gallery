@@ -1,74 +1,42 @@
 "use client";
 import {useEffect, useState} from "react";
 import {useRouter, useSearchParams} from "next/navigation";
-import * as Yup from "yup";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
-import {Eye, EyeClosed} from "lucide-react";
-import Form from "@/app/components/ui/Form";
 
 // Api
-import {Register} from "@/app/services/api/account";
+import {Register} from "@/services/api/account";
 
 // Custom functions
 import {activeToast} from "@/utils/activeToast";
 import {sleep} from "@/utils/delay";
 import {decodeBase64Url} from "@/utils/base64URL";
 
-// Types
-import type {Author} from "@/types/Author";
+// Components
+import {Eye, EyeClosed} from "lucide-react";
+import Form from "@/components/build/Form";
 
-type RegisterForm = Pick<Author, 'firstName' | 'lastName' | 'email' | 'password'> // chỉ lấy những trường này từ Author;
-const schema = Yup.object().shape({
-    firstName: Yup.string()
-        .required("* Vui lòng nhập họ")
-        .trim()
-        .min(1, "* Tối thiểu 1 kí tự")
-        .max(10, "* Tối đa 10 kí tự"),
-    lastName: Yup.string()
-        .required("* Vui lòng nhập tên")
-        .trim()
-        .min(1, "* Tối thiểu 1 kí tự")
-        .max(10, "* Tối đa 10 kí tự"),
-    email: Yup.string()
-        .required("* Vui lòng nhập email")
-        .trim()
-        .email("* Email không hợp lệ"),
-    password: Yup.string()
-        .required("* Vui lòng nhập mật khẩu")
-        .trim()
-        .min(8, "* Mật khẩu tối thiểu 8 kí tự")
-        .matches(
-            /^[A-Z](?=.*\d)(?=.*[@$!%*?&]).{7,}$/,
-            "* Mật khẩu phải bắt đầu bằng chữ in hoa, chứa ít nhất một chữ số và một ký tự đặc biệt"
-        ),
-});
+// Types
+import type {RegisterForm} from "@/types/Form";
+import {registerSchema} from "@/types/Yup.Schema";
+
 
 export default function RegisterPage() {
     const router = useRouter();
     const params = useSearchParams();
     const emailEncode = params.get("email");
+    const token = params.get("token");
     const [showPassword, setShowPassword] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isTermsAccepted, setIsTermsAccepted] = useState(false);
 
-    const {
-        register,
-        handleSubmit,
-        clearErrors,
-        watch,
-        reset,
-        formState: {errors},
-    } = useForm<RegisterForm>({
-        mode: 'all',
-        resolver: yupResolver(schema),
-        defaultValues: {email: ""},
+    const {register, handleSubmit, clearErrors, reset, formState: {errors}} = useForm<RegisterForm>({
+        mode: 'onSubmit',
+        resolver: yupResolver(registerSchema),
+        defaultValues: {email: emailEncode ? emailEncode : "", token: token ? token : null},
     });
 
     const submit = handleSubmit(async (data) => {
-
         const res = await Register(data);
-        console.log(res)
-
         let isSuccess = false;
 
         if (res.status_code === 201) {
@@ -88,7 +56,7 @@ export default function RegisterPage() {
 
     useEffect(() => {
         const setEmail = async () => {
-            if (!emailEncode) {
+            if (!emailEncode || !token) {
 
                 activeToast("Xác thực tài khoản thất bại", {
                     type: "error",
@@ -97,13 +65,13 @@ export default function RegisterPage() {
 
                 setTimeout(() => {
                     router.push("/account/register/verify-email");
-                }, 4000);
+                }, 3000);
             } else {
-                reset({email: decodeBase64Url(emailEncode)})
+                reset({email: decodeBase64Url(emailEncode), token})
             }
         }
         setEmail();
-    }, [emailEncode, router, reset]);
+    }, [emailEncode, router, reset,token]);
 
     return (
         <Form tittle="Đăng ký" login={true}>
@@ -158,9 +126,22 @@ export default function RegisterPage() {
                         <input
                             id="email"
                             type="text"
-                            value={watch("email")}
-                            disabled
+                            disabled={true}
                             {...register("email")}
+                            className="w-full bg-gray-200 text-gray-400  px-4 py-2.5 border rounded-lg cursor-not-allowed"
+                        />
+                    </div>
+
+                    {/* Token Field */}
+                    <div className={`hidden`}>
+                        <label htmlFor="token" className="block text-gray-700 font-medium mb-2">
+                            Mã xác thực <span className={`text-red-500`}>*</span>
+                        </label>
+                        <input
+                            id="token"
+                            type="text"
+                            disabled={true}
+                            {...register("token")}
                             className="w-full bg-gray-200 text-gray-400  px-4 py-2.5 border rounded-lg cursor-not-allowed"
                         />
                     </div>
@@ -209,7 +190,7 @@ export default function RegisterPage() {
                         <input
                             type="checkbox"
                             id="confirmTerms"
-                            onChange={(e) => setIsSubmitting(e.target.checked)}
+                            onChange={(e) => setIsTermsAccepted(e.target.checked)}
                             className="w-5 h-5 mt-1 cursor-pointer"
                         />
 
@@ -236,8 +217,8 @@ export default function RegisterPage() {
                     </div>
 
                     {/* Submit Button */}
-                    <button type="submit" disabled={!isSubmitting}
-                            className={`w-full bg-[#00009C] text-white py-2.5 border-2 rounded-lg ${!isSubmitting ? "cursor-not-allowed" : "hover:bg-white hover:text-[#00009C] hover:border-[#00009C] cursor-pointer"}`}>
+                    <button type="submit" disabled={!isTermsAccepted}
+                            className={`w-full bg-[#00009C] text-white py-2.5 border-2 rounded-lg ${!isTermsAccepted ? "cursor-not-allowed" : "hover:bg-white hover:text-[#00009C] hover:border-[#00009C] cursor-pointer"}`}>
                         Đăng ký
                     </button>
 
