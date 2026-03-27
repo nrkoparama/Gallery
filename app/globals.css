@@ -163,6 +163,31 @@ input[type="number"]::-webkit-outer-spin-button {
     scrollbar-width: none; /* Firefox*/
 }
 
+/*Tạo hiệu ứng gạch chân xuất hiện từ từ, từ trái sáng phải*/
+.custom-underline {
+    position: relative;
+}
+
+.custom-underline::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background-color: #3730a3;
+    opacity: 90;
+    transition: width 0.5s ease-in-out;
+}
+
+.custom-underline:hover {
+    color: #3730a3;
+}
+
+.custom-underline:hover:after {
+    width: 100%;
+}
+
 /*----------------*/
 .skeleton {
     position: relative;
@@ -189,6 +214,109 @@ input[type="number"]::-webkit-outer-spin-button {
 @keyframes loadingShimmer {
     100% {
         left: 100%;
+    }
+}
+
+/*Hiệu dứng fade-in*/
+/*dùng chung cho các hiệu ứng fade-in*/
+[data-visible="false"] .custom-fade-in {
+    opacity: 0;
+}
+
+/*top to bottom*/
+[data-visible="true"] .fade-in-t-b {
+    animation: fade-in-t-b 1s forwards;
+}
+
+/*bottom to top*/
+[data-visible="true"] .fade-in-b-t {
+    animation: fade-in-b-t 1s forwards;
+}
+
+/*right to left*/
+[data-visible="true"] .fade-in-r-l {
+    animation: fade-in-r-l 1s forwards;
+}
+
+/*left to right*/
+[data-visible="true"] .fade-in-l-r {
+    animation: fade-in-l-r 1s forwards;
+}
+
+[data-visible="true"] .delay-1 {
+    animation-delay: 50ms;
+}
+
+[data-visible="true"] .delay-2 {
+    animation-delay: 150ms;
+}
+
+[data-visible="true"] .delay-3 {
+    animation-delay: 250ms;
+}
+
+@keyframes fade-in-t-b {
+    from {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-in-b-t {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /*0% {*/
+    /*    opacity: 0;*/
+    /*    transform: translateY(40px);*/
+    /*}*/
+    /*25%{*/
+    /*    opacity: 0.25;*/
+    /*    transform: translateY(30px);*/
+    /*}*/
+    /*50% {*/
+    /*    opacity: 0.5;*/
+    /*    transform: translateY(20px);*/
+    /*}*/
+    /*75%{*/
+    /*    opacity: 0.75;*/
+    /*    transform: translateY(10px);*/
+    /*}*/
+    /*100% {*/
+    /*    opacity: 1;*/
+    /*    transform: translateY(0)*/
+    /*}*/
+}
+
+@keyframes fade-in-r-l {
+    from {
+        opacity: 0;
+        transform: translateX(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fade-in-l-r {
+    from {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
     }
 }
 

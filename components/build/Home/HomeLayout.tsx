@@ -1,12 +1,10 @@
 "use client";
 import SliderSection from "@/components/build/Home/SliderSection";
 import ExploreSection from "@/components/build/Home/ExploreSection";
-import GallerySection from "@/components/build/Home/GallerySection";
 import WhyChooseUsSection from "@/components/build/Home/WhyChooseUsSection";
 import SubscriptionSection from "@/components/build/Home/SubscriptionSection";
 import NewsSection from "@/components/build/Home/NewsSection";
 import NewsLetterComponent from "@/components/build/Home/SubscribeNewsLetterSection";
-
 
 const blogs = [
     {
@@ -47,11 +45,10 @@ const images = [
 
 export default function HomeLayout() {
     return (
-        <div className={`space-y-12`}>
+        <div className={`space-y-10`}>
             <SliderSection/>
-            <ExploreSection/>
-            <GallerySection images={images}/>
-            <NewsSection titleSection="Bài viết nổi bật" blogs={blogs}/>
+            <ExploreSection images={images}/>
+            <NewsSection titleSection="sự kiện và tin tức" blogs={blogs}/>
             <WhyChooseUsSection/>
             <SubscriptionSection/>
             <NewsSection titleSection="sự kiện và tin tức" blogs={blogs}/>

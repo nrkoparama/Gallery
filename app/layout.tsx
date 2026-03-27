@@ -1,48 +1,8 @@
-import type {Metadata} from "next";
 import "./globals.css";
 import {ReactNode} from "react";
-import NextAuthProvider from "@/components/provider/next-auth.provider";
-import ReduxProvider from "@/components/provider/redux-toolkit.provider";
-import AuthorContextProvider from "@/components/provider/authorContext.provider"
-import {Toaster} from "@/components/ui/sonner";
-import Header from "@/components/build/Header/Header"
-import Footer from "@/components/build/Footer/Footer";
-
-import {getServerSession} from "next-auth";
-import {authOptions} from "@/app/api/auth/authOptions";
-
-export const metadata: Metadata = {
-    title: "Gallery",
-    description: "Website lưu trữ ảnh",
-    icons: {
-        icon: "./android-chrome-512x512.png"
-    }
-};
-
 
 export default async function RootLayout({children}: Readonly<{ children: ReactNode }>) {
-    const session = await getServerSession(authOptions);
-    return (
-        <html lang="vi">
-        <body className={`antialiased tracking-wider`}>
-        <AuthorContextProvider>
-            <ReduxProvider>
-                <NextAuthProvider session={session}>
-                    <Header/>
-                    <main>{children}</main>
-                    <Footer/>
-                    <Toaster
-                        position={`top-center`}
-                        swipeDirections={["top", "right"]}
-                        richColors={true}
-                        duration={2000}
-                    />
-                </NextAuthProvider>
-            </ReduxProvider>
-        </AuthorContextProvider>
-        </body>
-        </html>
-    );
+    return children;
 }
 
 

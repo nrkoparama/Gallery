@@ -1,0 +1,10 @@
+{
+  "Metadata": {
+    "title": "Gallery",
+    "description": "Image storage website"
+  },
+  "HomePage": {
+    "title": "Account",
+    "subtitle": "Manage your account setting"
+  }
+}

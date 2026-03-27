@@ -1,16 +1,17 @@
 "use client";
 import Link from "next/link";
-import {ChevronDown} from "lucide-react";
+import {MoveRight} from "lucide-react";
 // import {useRouter} from "next/navigation";
 import {HTMLAttributes} from "react";
 import Image from "next/image";
+import {customGetDate, customGetGMT, customGetTime} from "@/utils/date";
 
 type NewsProps = {
     titleSection: string,
     blogs: { title: string, content: string, image: string }[] // sửa thành Blog[]
     props?: HTMLAttributes<HTMLDivElement>
 }
-const date = new Date();
+const date = new Date("2025-12-18T09:00:00");
 
 /**
  * Tailwind - Cách ngắt chữ và hiện "..."
@@ -27,8 +28,9 @@ const date = new Date();
  *
  * */
 
-export default function NewsSection({titleSection,blogs, props}: NewsProps) {
+export default function NewsSection({titleSection, blogs, props}: NewsProps) {
     // const router = useRouter();
+
     return (
         <section className={`container px-4 md:px-6 xl:px-8`} {...props}>
             <div className={`w-[90%] mx-auto flex flex-col items-center space-y-5`}>
@@ -38,7 +40,7 @@ export default function NewsSection({titleSection,blogs, props}: NewsProps) {
                         <Link
                             key={index}
                             href={`/blog?id=${index}`}
-                            className={`bg-white p-4 border-2 shadow`}>
+                            className={`bg-white p-4 border-2 rounded-md shadow`}>
                             <div className={`relative w-full h-64 aspect-auto`}>
                                 <Image
                                     src={blog.image}
@@ -51,18 +53,31 @@ export default function NewsSection({titleSection,blogs, props}: NewsProps) {
                                 <p className={`text-base font-semibold`}>
                                     {blog.title}
                                 </p>
-                                <p className={`opacity-80`}>
-                                    {date.toLocaleString("vi-VN")}
+                                <p className={`opacity-80 tracking-widest inline-flex gap-x-1`}>
+                                    {/*{date.toLocaleString("vi-VN")}*/}
+                                    {/*{customGetDay(date.getDay())},*/}
+                                    <span>
+                                        {customGetDate(date)}
+                                    </span>
+                                    <span>
+                                        {customGetTime(date)}
+                                    </span>
+                                    <span>
+                                        {customGetGMT(date)}
+                                    </span>
                                 </p>
-                                <p className={`line-clamp-3`}>{blog.content}</p>
+                                <p className={`line-clamp-3 opacity-80`}>{blog.content}</p>
                             </div>
                         </Link>
                     ))}
                 </div>
-                <Link href={"/post"} className={`inline-flex justify-center items-center gap-1 opacity-80 hover:opacity-100 cursor-pointer`}>
-                    Xem thêm
+                <Link
+                    href={"/post"}
+                    className={`group inline-flex items-center gap-1 opacity-80 duration-500 hover:opacity-100 hover:scale-110 cursor-pointer`}>
+                    xem thêm
                     <span>
-                        <ChevronDown size={16} strokeWidth={1.75}/>
+                        <MoveRight size={16} strokeWidth={1.75}
+                                   className={`transition-transform duration-500 group-hover:rotate-45`}/>
                     </span>
                 </Link>
             </div>

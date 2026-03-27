@@ -1,10 +1,13 @@
 import type {NextConfig} from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
     /* config options here */
 
     reactStrictMode: true, // tạo 2 lần render trong khi dev
-    productionBrowserSourceMaps: true, // tạo source map - khi lên product phải để false
+    productionBrowserSourceMaps: false, // tạo source map - khi lên product phải để false
 
     /* next/image */
     /* Docs: https://nextjs.org/docs/pages/api-reference/components/image#remotepatterns */
@@ -21,4 +24,4 @@ const nextConfig: NextConfig = {
     }
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

@@ -9,23 +9,29 @@ module.exports = {
     ],
     theme: {
         extend: {
-            // fontFamily: {
-            //     beVietnamPro: ["var(--font-be-vietnam-pro)", "sans-serif"], // font chính ( body text)
-            //     playFair: ["var(--font-playfair)", "serif"], // font cho hading / title
-            //     firaCode: ["var(--font-fira-code)", "monospace"] // font cho block code
-            // },
             boxShadow: {
                 'custom-full-default': '0 0 20px 5px rgba(0,0,0,0.25)',   // bóng đều xung quanh
                 // 'glow': '0 0 15px 5px rgba(59,130,246,0.5)', // glow xanh
             },
-            // animation:{
-            //     bounce: "var(--animate-bounce)"
-            // },
-            // keyframe:{
-            //     customBounceAnimation:{
-            //         "0%":
-            //     }
-            // }
+            keyframes: {
+                "fade-in": {
+                    "0%": {
+                        opacity: "0",
+                        translate: "40px 40px"
+                    },
+                    "50%": {
+                        opacity: "50",
+                        translate: "20px"
+                    },
+                    "100%": {
+                        opacity: "100",
+                        translate: "0px"
+                    },
+                }
+            },
+            animation: {
+                "fade-in": "fade-in 1s ease-in forward"
+            }
         },
     },
     plugins: [],

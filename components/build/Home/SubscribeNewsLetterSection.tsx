@@ -1,15 +1,16 @@
 "use client";
 import React from "react";
-import {useForm} from "react-hook-form";
-import type {SubscribeNewsLetterForm} from "@/types/Form";
-import {yupResolver} from "@hookform/resolvers/yup";
-import {newsLetterSchema} from "@/types/Yup.Schema";
+import { useForm } from "react-hook-form";
+import type { SubscribeNewsLetterForm } from "@/types/Form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { newsLetterSchema } from "@/types/Yup.Schema";
 
 export default function SubscribeNewsLetterSection(props: React.HTMLAttributes<HTMLDivElement>) {
-    const {handleSubmit, clearErrors, register} = useForm<SubscribeNewsLetterForm>({
+    const { handleSubmit, clearErrors, register } = useForm<SubscribeNewsLetterForm>({
         mode: "onSubmit",
         resolver: yupResolver(newsLetterSchema)
     });
+    
     const submit = handleSubmit(async (data) => {
         console.log(data);
     })
@@ -36,7 +37,7 @@ export default function SubscribeNewsLetterSection(props: React.HTMLAttributes<H
                             placeholder={"Nhập địa chỉ email"}
                             className={`w-[70%] bg-white text-gray-700 text-ellipsis px-3 py-2 focus:outline-none`}
                         />
-                        {/*<Input id="email" register={} o/>*/}
+
                         <button className={`w-[30%] px-2.5 py-3 bg-black font-semibold`}>
                             ĐĂNG KÝ
                         </button>

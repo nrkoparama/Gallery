@@ -10,7 +10,7 @@ import {usePathname} from "next/navigation";
 // if (!hide) return null;
 
 // cách viết như này sẽ cần khai báo nhiều path hơn cách trên, có thể dynamic route như /path/{value}
-const showOnPaths = ["axe"];
+const showOnPaths = ["/axe"];
 
 
 export default function Header() {
@@ -39,9 +39,8 @@ export default function Header() {
     if (!display) return null;
 
     return (
-        <header className={`sticky top-0 left-0 z-10 w-full xl:px-8`}>
+        <header className={``}>
             {viewport > 640 ? <PCHeader author={author}/> : <MobileHeader author={author}/>}
         </header>
-
     )
 }
