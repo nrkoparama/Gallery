@@ -8,30 +8,30 @@ import NewsLetterComponent from "@/components/build/Home/SubscribeNewsLetterSect
 
 const blogs = [
     {
-        title: "Biển và Em",
-        content: "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả.\n" +
-            "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả.\n" +
-            "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả",
+        title: "Tiêu đề bài viết",
+        content: "Đây là mô tả bài viết.\n" +
+            "Đây là mô tả bài viết.\n" +
+            "Đây là mô tả bài viết",
         image: "/assets/banners/hero-banner1.jpg"
     },
     {
-        title: "Biển và Em",
-        content: "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả.\n" +
-            "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả.\n" +
-            "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả",
+        title: "Tiêu đề bài viết",
+        content: "Đây là mô tả bài viết.\n" +
+            "Đây là mô tả bài viết.\n" +
+            "Đây là mô tả bài viết",
         image: "/assets/banners/hero-banner1.jpg"
     },
     {
-        title: "Biển và Em",
-        content: "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả.\n" +
-            "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả.\n" +
-            "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả",
+        title: "Tiêu đề bài viết",
+        content: "Đây là mô tả bài viết.\n" +
+            "Đây là mô tả bài viết.\n" +
+            "Đây là mô tả bài viết",
         image: "/assets/banners/hero-banner1.jpg"
     }, {
-        title: "Biển và Em",
-        content: "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả.\n" +
-            "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả.\n" +
-            "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả",
+        title: "Tiêu đề bài viết",
+        content: "Đây là mô tả bài viết.\n" +
+            "Đây là mô tả bài viết.\n" +
+            "Đây là mô tả bài viết",
         image: "/assets/banners/hero-banner1.jpg"
     }
 ]
