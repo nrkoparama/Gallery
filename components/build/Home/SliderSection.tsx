@@ -38,7 +38,7 @@ export default function SliderSection(props: HTMLAttributes<HTMLDivElement>) {
 
                     <p className={`text-8xl font-semibold inline-flex flex-col transition-transform duration-1000 ${isVisible ? "-translate-y-10" : "opacity-0"}`}>
                             <span className={`text-lg text-left font-semibold`}>
-                                2025
+                                2026
                             </span>
                         the turning soul
                     </p>
@@ -49,11 +49,11 @@ export default function SliderSection(props: HTMLAttributes<HTMLDivElement>) {
                                 &nbsp;&quot; this is not the way &quot;&nbsp;
                         </span>
                         &nbsp;
-                        that`&apos;`,s where healing begins.
+                        that&apos;s where healing begins.
                         <br/>
                     </p>
                     <p className={`transition-transform duration-1500 ${isVisible ? "-translate-y-10" : "opacity-0"}`}>those
-                        who turn back aren`&apos;`,t always whole, but they
+                        who turn back aren&apos;t always whole, but they
                         are aware.</p>
                     <p className={`w-10 text-xl font-semibold custom-underline cursor-pointer transition-transform duration-1750 ${isVisible ? "-translate-y-10" : "opacity-0"}`}>
                         <Link href={"https://www.pinterest.com/fadhilahwahyunisiti/"} target="_blank">
