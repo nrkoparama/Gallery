@@ -12,35 +12,35 @@ const blogs = [
         content: "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả.\n" +
             "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả.\n" +
             "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả",
-        image: "/assets/images/banners/hero-banner1.jpg"
+        image: "/assets/banners/hero-banner1.jpg"
     },
     {
         title: "Biển và Em",
         content: "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả.\n" +
             "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả.\n" +
             "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả",
-        image: "/assets/images/banners/hero-banner1.jpg"
+        image: "/assets/banners/hero-banner1.jpg"
     },
     {
         title: "Biển và Em",
         content: "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả.\n" +
             "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả.\n" +
             "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả",
-        image: "/assets/images/banners/hero-banner1.jpg"
+        image: "/assets/banners/hero-banner1.jpg"
     }, {
         title: "Biển và Em",
         content: "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả.\n" +
             "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả.\n" +
             "Trước khi gặp em đối với anh Biển là nhà, nó mang lại cho anh một cảm giác khó tả",
-        image: "/assets/images/banners/hero-banner1.jpg"
+        image: "/assets/banners/hero-banner1.jpg"
     }
 ]
 const images = [
-    "/assets/images/mockups/mockup-1.jpg",
-    "/assets/images/mockups/mockup-2.webp",
-    "/assets/images/mockups/mockup-3.jpg",
-    "/assets/images/mockups/mockup-4.jpg",
-    "/assets/images/mockups/mockup-5.jpg"
+    "/assets/demo/1.webp",
+    "/assets/demo/2.jpg",
+    "/assets/demo/3.jpg",
+    "/assets/demo/4.webp",
+    "/assets/demo/5.webp"
 ]
 
 export default function HomeLayout() {

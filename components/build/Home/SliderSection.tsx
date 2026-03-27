@@ -26,7 +26,7 @@ export default function SliderSection(props: HTMLAttributes<HTMLDivElement>) {
 
             <div className={`relative w-full max-h-screen aspect-video`}>
                 <Image
-                    src="/assets/images/banners/banner8.jpg"
+                    src="/assets/banners/hero-banner.jpg"
                     alt="Hero banner"
                     fill
                     className={`object-cover`}
